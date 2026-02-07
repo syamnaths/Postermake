@@ -122,8 +122,6 @@
       const iJD = idx("JD");
       const iDes = idx("Designation Name");
       const iExp = idx("Experience if required");
-      const iEmail = idx("Contact Email");
-      const iPhone = idx("Contact No.");
       const iStatus = idx("status");
 
       cardsContainer.innerHTML = "";
@@ -135,15 +133,15 @@
 
         const jobID = (row[iJobID] || "").trim();
         const status = (row[iStatus] || "").toLowerCase().trim();
+        const exp = (row[iExp] || "").trim();
 
+        // ✅ Exclusion rules
         if (status === "posted") continue;
         if (!jobID) continue;
+        if (!exp) continue;
 
         const jd = row[iJD] || "";
         const des = row[iDes] || "";
-        const exp = row[iExp] || "";
-        const email = row[iEmail] || "";
-        const phone = row[iPhone] || "";
 
         const jsonTemplate = {
           "poster_type": "Job Recruitment Poster",
@@ -171,7 +169,7 @@
             "bottom_section": "Contact details aligned neatly with icons"
           },
           "footer_details": {
-             "Website": "https://www.itjobcell.com/",
+            "Website": "https://www.itjobcell.com/",
             "Email": "careers@itjobcell.com",
             "Phone": "+91 9526011800"
           },
@@ -238,7 +236,7 @@
         count++;
       }
 
-      statusMsg.textContent = `Loaded ${count} job(s) (excluding posted or missing Job ID).`;
+      statusMsg.textContent = `Loaded ${count} job(s) (excluding posted, missing Job ID, or missing Experience).`;
     }
 
     function parseCSVLine(line) {
