@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>CSV / Sheets → Job Poster JSON</title>
+  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+</head>
+<body class="bg-slate-100 min-h-screen">
+
+  <div class="max-w-7xl mx-auto p-4">
+    <h1 class="text-3xl font-bold mb-2 text-slate-800">Job Poster Generator</h1>
+    <p class="text-slate-600 mb-6">
+      Upload CSV or paste Google Sheets link. Preview or copy JSON per job.
+    </p>
+
+    <!-- Inputs -->
+    <div class="flex flex-col md:flex-row gap-4 mb-6">
+      <input type="file" id="csvFile" accept=".csv"
+        class="block w-full md:w-1/2 text-sm text-slate-500
+        file:mr-4 file:py-2 file:px-4
+        file:rounded-lg file:border-0
+        file:text-sm file:font-semibold
+        file:bg-blue-600 file:text-white
+        hover:file:bg-blue-700" />
+
+      <div class="flex w-full md:w-1/2 gap-2">
+        <input type="text" id="sheetLink" placeholder="Paste public Google Sheets link..."
+          class="flex-1 p-2 rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-500" />
+        <button id="loadSheet"
+          class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700">
+          Load
+        </button>
+      </div>
+    </div>
+
+    <!-- Status -->
+    <div id="statusMsg" class="mb-4 text-sm text-slate-600"></div>
+
+    <!-- Cards Grid -->
+    <div id="cards" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4"></div>
+  </div>
+
+  <!-- Preview Modal -->
+  <div id="modal" class="fixed inset-0 bg-black/50 hidden items-center justify-center p-4 z-50">
+    <div class="bg-white rounded-xl max-w-3xl w-full p-4">
+      <div class="flex justify-between items-center mb-2">
+        <h2 class="text-lg font-bold text-slate-800">JSON Prompt Preview</h2>
+        <button id="closeModal" class="text-slate-500 hover:text-slate-800">✕</button>
+      </div>
+      <pre id="modalContent" class="bg-slate-100 p-3 rounded-lg text-xs overflow-auto max-h-[70vh]"></pre>
+    </div>
+  </div>
+
+  <script>
+    const fileInput = document.getElementById("csvFile");
+    const sheetInput = document.getElementById("sheetLink");
+    const loadSheetBtn = document.getElementById("loadSheet");
+    const cardsContainer = document.getElementById("cards");
+    const statusMsg = document.getElementById("statusMsg");
+
+    const modal = document.getElementById("modal");
+    const modalContent = document.getElementById("modalContent");
+    const closeModal = document.getElementById("closeModal");
+
+    // Restore remembered sheet link
+    const savedSheet = localStorage.getItem("lastSheetLink");
+    if (savedSheet) {
+      sheetInput.value = savedSheet;
+    }
+
+    closeModal.addEventListener("click", () => {
+      modal.classList.add("hidden");
+    });
+
+    fileInput.addEventListener("change", () => {
+      const file = fileInput.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = e => processCSV(e.target.result);
+      reader.readAsText(file);
+    });
+
+    loadSheetBtn.addEventListener("click", async () => {
+      const link = sheetInput.value.trim();
+      if (!link) return alert("Paste a Google Sheets link");
+
+      localStorage.setItem("lastSheetLink", link); // remember it
+
+      const csvUrl = convertSheetLinkToCSV(link);
+      if (!csvUrl) return alert("Invalid Google Sheets link");
+
+      statusMsg.textContent = "Loading sheet...";
+      try {
+        const res = await fetch(csvUrl);
+        const text = await res.text();
+        processCSV(text);
+        statusMsg.textContent = "Sheet loaded successfully.";
+      } catch (e) {
+        console.error(e);
+        alert("Failed to load sheet. Make sure it's public.");
+      }
+    });
+
+    function convertSheetLinkToCSV(link) {
+      const match = link.match(/spreadsheets\/d\/([^\/]+)/);
+      if (!match) return null;
+      const id = match[1];
+      return `https://docs.google.com/spreadsheets/d/${id}/export?format=csv`;
+    }
+
+    function processCSV(csvText) {
+      const lines = csvText.split(/\r?\n/).filter(l => l.trim() !== "");
+      if (lines.length < 2) {
+        alert("CSV must have headers and at least one row");
+        return;
+      }
+
+      const headers = parseCSVLine(lines[0]);
+      const idx = name => headers.findIndex(h => h.trim().toLowerCase() === name.toLowerCase());
+
+      const iJobID = idx("Job ID");
+      const iJD = idx("JD");
+      const iDes = idx("Designation Name");
+      const iExp = idx("Experience if required");
+      const iEmail = idx("Contact Email");
+      const iPhone = idx("Contact No.");
+      const iStatus = idx("status");
+
+      cardsContainer.innerHTML = "";
+      let count = 0;
+
+      for (let i = 1; i < lines.length; i++) {
+        const row = parseCSVLine(lines[i]);
+        if (!row.length) continue;
+
+        const jobID = (row[iJobID] || "").trim();
+        const status = (row[iStatus] || "").toLowerCase().trim();
+
+        if (status === "posted") continue;
+        if (!jobID) continue;
+
+        const jd = row[iJD] || "";
+        const des = row[iDes] || "";
+        const exp = row[iExp] || "";
+        const email = row[iEmail] || "";
+        const phone = row[iPhone] || "";
+
+        const jsonTemplate = {
+          "poster_type": "Job Recruitment Poster",
+          "aspect_ratio": "1:1",
+          "Resolution": "1080 x 1080",
+          "design_style": {
+            "theme_colors": ["blue", "white"],
+            "look_and_feel": "Professional, modern, clean, Canva/Photoshop-style",
+            "typography": "Sans-serif, corporate, readable hierarchy",
+            "background": {
+              "image_source": `Create a best background matching ${des} job poster`,
+              "effect": "Blurred",
+              "overlay": "Soft white/blue gradient for text readability"
+            }
+          },
+          "job_details": {
+            "Job_ID": jobID,
+            "JD": jd,
+            "Designation_Name": des,
+            "Experience": exp
+          },
+          "layout_structure": {
+            "top_section": "Job title highlighted with bold typography",
+            "middle_section": "Job details displayed in a clean card or grid format",
+            "bottom_section": "Contact details aligned neatly with icons"
+          },
+          "footer_details": {
+            "Website": "https://www.itjobcell.com/",
+            "Enquiries": `${email} or ${phone}`
+          },
+          "visual_elements": {
+            "icons": ["website", "email", "phone"],
+            "shapes": "Soft rounded rectangles or lines",
+            "spacing": "Balanced white space for premium appearance"
+          },
+          "constraints": {
+            "no_repeated_information": true,
+            "single_occurrence_of_contact_details": true
+          }
+        };
+
+        const jsonString = JSON.stringify(jsonTemplate, null, 2);
+
+        const card = document.createElement("div");
+        card.className = "bg-white rounded-xl shadow hover:shadow-lg transition p-4 border border-slate-200 flex flex-col";
+
+        card.innerHTML = `
+          <div class="text-xs text-slate-500 mb-1">Job ID</div>
+          <div class="font-semibold text-slate-800 mb-2">${jobID}</div>
+
+          <div class="text-lg font-bold text-blue-700 mb-1">${des}</div>
+          <div class="text-sm text-slate-600 mb-2 line-clamp-3">${jd}</div>
+
+          <div class="text-sm text-slate-700 mb-4">
+            <span class="font-semibold">Experience:</span> ${exp}
+          </div>
+
+          <div class="mt-auto flex gap-2">
+            <button class="previewBtn flex-1 px-3 py-2 text-sm bg-slate-200 rounded-lg hover:bg-slate-300">
+              Preview Prompt
+            </button>
+            <button class="copyBtn flex-1 px-3 py-2 text-sm bg-blue-600 text-white rounded-lg hover:bg-blue-700">
+              Copy JSON
+            </button>
+          </div>
+        `;
+
+        const previewBtn = card.querySelector(".previewBtn");
+        const copyBtn = card.querySelector(".copyBtn");
+
+        previewBtn.addEventListener("click", () => {
+          modalContent.textContent = jsonString;
+          modal.classList.remove("hidden");
+          modal.classList.add("flex");
+        });
+
+        copyBtn.addEventListener("click", async () => {
+          await navigator.clipboard.writeText(jsonString);
+          const originalText = copyBtn.textContent;
+          copyBtn.textContent = "Copied ✓";
+          copyBtn.classList.remove("bg-blue-600");
+          copyBtn.classList.add("bg-green-600");
+          setTimeout(() => {
+            copyBtn.textContent = originalText;
+            copyBtn.classList.remove("bg-green-600");
+            copyBtn.classList.add("bg-blue-600");
+          }, 1200);
+        });
+
+        cardsContainer.appendChild(card);
+        count++;
+      }
+
+      statusMsg.textContent = `Loaded ${count} job(s) (excluding posted or missing Job ID).`;
+    }
+
+    function parseCSVLine(line) {
+      const result = [];
+      let current = "";
+      let inQuotes = false;
+
+      for (let i = 0; i < line.length; i++) {
+        const char = line[i];
+        if (char === '"') {
+          inQuotes = !inQuotes;
+        } else if (char === "," && !inQuotes) {
+          result.push(current.trim());
+          current = "";
+        } else {
+          current += char;
+        }
+      }
+      result.push(current.trim());
+      return result.map(v => v.replace(/^"|"$/g, ""));
+    }
+  </script>
+
+</body>
+</html>
