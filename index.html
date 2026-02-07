@@ -123,6 +123,7 @@
       const iDes = idx("Designation Name");
       const iExp = idx("Experience if required");
       const iStatus = idx("status");
+      const iLoc = idx("Location");
 
       cardsContainer.innerHTML = "";
       let count = 0;
@@ -134,6 +135,7 @@
         const jobID = (row[iJobID] || "").trim();
         const status = (row[iStatus] || "").toLowerCase().trim();
         const exp = (row[iExp] || "").trim();
+        const loc = (row[iLoc] || "").trim();
 
         // ✅ Exclusion rules
         if (status === "posted") continue;
@@ -145,12 +147,21 @@
 
         const jsonTemplate = {
           "poster_type": "Job Recruitment Poster",
-          "aspect_ratio": "1:1",
+          "prompt": `Modern corporate job recruitment poster for a ${des}. Clean, minimal UI layout with a light blue and white gradient background. Rounded card-based composition, professional startup aesthetic.
+            Headline text: “WE ARE HIRING”Subheading: “${des}” Include a photorealistic South Asian Indian young professional (male or female) working in a modern office environment. Soft office lighting, shallow depth of field, blurred background with subtle blue/white overlay for text readability.`,
+          "negative_prompt": "Messy layout, clutter, low resolution, distorted text, poor typography, watermark, logo misuse, oversaturated colors, blur, artifacts, stock-photo look, uncanny faces.",
+          "Image to include": `Photorealistic original young professional ${des} South Asian Indian Proffessional(random male or female ) Model (Think about the age based on the ${des} Senior, Junior etc keep the highest slab 40years and lowest slab 20 years) working in an office environment`,
+          "style": "modern corporate UI, marketing poster",
+          "Technnology icons to include": `include ${des} tech logos well alligned in whitespace area use the logo only if clearly identifiable and shown in original brand colors. Skip if uncertain avoid using over faces ,body of models, very close-by text contents etc`,
+          "lighting": "soft office lighting",
+          "composition": "premium white space, sharp focus, high detail.",
+          "aspect_ratio": "1:1, resolution 1080×1080, 4K quality look",
           "Resolution": "1080 x 1080",
+          "reality_check": "This will look corporate and credible, not like a spam hiring poster If you want it to feel premium startup instead of IT consultancy, reduce text density even more and let the face + whitespace do the work. Dont include any external data that is not included in this prompt",
           "design_style": {
             "theme_colors": ["blue", "white"],
-            "look_and_feel": "Professional, modern, clean, Canva/Photoshop-style",
-            "typography": "Sans-serif, corporate, readable hierarchy",
+            "look_and_feel": "modern tech startup, flat + semi-realistic UI, Canva/Photoshop-quality marketing poster.",
+            "typography": "clean sans-serif, strong hierarchy, corporate and readable",
             "background": {
               "image_source": `Create a best background matching ${des} job poster`,
               "effect": "Blurred",
@@ -161,12 +172,14 @@
             "Job_ID": jobID,
             "JD": jd,
             "Designation_Name": des,
-            "Experience": exp
+            "Experience": exp,
+            "Location": loc
           },
           "layout_structure": {
             "top_section": "Job title highlighted with bold typography",
-            "middle_section": "Job details displayed in a clean card or grid format",
-            "bottom_section": "Contact details aligned neatly with icons"
+            "middle_section": "Properly aligned Job details displayed in a clean card or grid format and avoid excess spacing",
+            "bottom_section": "Contact details aligned neatly with icons",
+            "White_space_area": `Show the ${exp} needed`
           },
           "footer_details": {
             "Website": "https://www.itjobcell.com/",
@@ -184,7 +197,10 @@
           }
         };
 
+
         const jsonString = JSON.stringify(jsonTemplate, null, 2);
+
+        const finalString = 'Create Image ' + jsonString;
 
         const card = document.createElement("div");
         card.className = "bg-white rounded-xl shadow hover:shadow-lg transition p-4 border border-slate-200 flex flex-col";
@@ -214,13 +230,13 @@
         const copyBtn = card.querySelector(".copyBtn");
 
         previewBtn.addEventListener("click", () => {
-          modalContent.textContent = jsonString;
+          modalContent.textContent = finalString;
           modal.classList.remove("hidden");
           modal.classList.add("flex");
         });
 
         copyBtn.addEventListener("click", async () => {
-          await navigator.clipboard.writeText(jsonString);
+          await navigator.clipboard.writeText(finalString);
           const originalText = copyBtn.textContent;
           copyBtn.textContent = "Copied ✓";
           copyBtn.classList.remove("bg-blue-600");
