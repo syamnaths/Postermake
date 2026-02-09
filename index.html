@@ -149,8 +149,9 @@
           "poster_type": "Job Recruitment Poster",
           "prompt": `Modern corporate job recruitment poster for a ${des}. Clean, minimal UI layout with a light blue and white gradient background. Rounded card-based composition, professional startup aesthetic. Headline text: “WE ARE HIRING”Subheading: “${des}” Include a photorealistic South Asian Indian young professional (male or female) working in a modern office environment. Soft office lighting, shallow depth of field, blurred background with subtle blue/white overlay for text readability.`,
           "negative_prompt": "Messy layout, clutter, low resolution, distorted text, poor typography, watermark, logo misuse, oversaturated colors, blur, artifacts, stock-photo look, uncanny faces.",
-          "Image to include": `Photorealistic original young professional ${des} South Asian Indian Proffessional(choose random gender male or female ) Model (Think about the age based on the ${des} identify the  which post the poster is being designed for like is it Senior or Junior, keep the highest age slab as 40years and lowest age slab 20 years while creating the model persona) working in an office environment`,
+          "Image_to_include": `Photorealistic original image young professional ${des} South Asian Indian IT Proffessional or Proffessional working in related industry (choose random gender male or female ) Model (consider the age based on the ${des} identify the which post the poster is being designed for like is it Senior or Junior, keep the highest age slab as 40 years and lowest age slab 20 years while creating the model persona ) working in an office environment`,
           "style": "modern corporate UI, marketing poster",
+          "anti_halucination_instruction": "Critically evaluate this information and list any potential inaccuracies or contradictions. Do not use external knowledge or fabricate any information.",
           "job_details": {
             "Job_ID": jobID,
             "JD": jd,
@@ -176,8 +177,8 @@
             }
           },
           "layout_structure": {
-            "top_section": "Job title highlighted with bold typography",
-            "middle_section": "Properly aligned Job details displayed in a clean card or grid format and avoid excess spacing. Arrange all keys left alligned and values just after the : with equal spaced from the key",
+            "top_section": "Job title highlighted with bold typography in Capital case",
+            "middle_section": "Properly aligned Job details displayed in a clean card or grid format and avoid excess spacing. Arrange all keys left alligned and values just after the : with equal spaced from the key in  in Sentence case",
             "bottom_section": "Contact details aligned neatly with icons",
             "White_space_area": `Show the ${exp} needed`,
             "allignment_standard_to_follow":"if the content is is column layout dont use center align onlu use center align only if the content is columns"
