@@ -147,8 +147,7 @@
 
         const jsonTemplate = {
           "poster_type": "Job Recruitment Poster",
-          "prompt": `Modern corporate job recruitment poster for a ${des}. Clean, minimal UI layout with a light blue and white gradient background. Rounded card-based composition, professional startup aesthetic.
-            Headline text: “WE ARE HIRING”Subheading: “${des}” Include a photorealistic South Asian Indian young professional (male or female) working in a modern office environment. Soft office lighting, shallow depth of field, blurred background with subtle blue/white overlay for text readability.`,
+          "prompt": `Modern corporate job recruitment poster for a ${des}. Clean, minimal UI layout with a light blue and white gradient background. Rounded card-based composition, professional startup aesthetic. Headline text: “WE ARE HIRING”Subheading: “${des}” Include a photorealistic South Asian Indian young professional (male or female) working in a modern office environment. Soft office lighting, shallow depth of field, blurred background with subtle blue/white overlay for text readability.`,
           "negative_prompt": "Messy layout, clutter, low resolution, distorted text, poor typography, watermark, logo misuse, oversaturated colors, blur, artifacts, stock-photo look, uncanny faces.",
           "Image to include": `Photorealistic original young professional ${des} South Asian Indian Proffessional(choose random gender male or female ) Model (Think about the age based on the ${des} identify the  which post the poster is being designed for like is it Senior or Junior, keep the highest age slab as 40years and lowest age slab 20 years while creating the model persona) working in an office environment`,
           "style": "modern corporate UI, marketing poster",
@@ -159,8 +158,8 @@
             "Experience": exp,
             "Location": loc
           },
-          "design_inpiration_attachment" : "If design inspiration image file included then use that design inspiration in designing important to follow and using the contents mentioned job_details only",
-          "Technnology icons to include": `include ${des} tech logos well alligned in whitespace area use the logo only if clearly identifiable and shown in original brand colors. Skip if uncertain avoid using over faces ,body of models, very close-by text contents etc`,
+          "design_inpiration_attachment" : "If design inspiration image file included overide default then use that design inspiration in designing important to follow and using the contents mentioned job_details only",
+          "Technnology_icons_to_include": `include proportionative equal height matching dimension ${des} tech logos especially equally spaced and well alligned relative to the content in whitespace area use tiny logos only if clearly identifiable and shown in original brand colors. Skip if uncertain avoid using over faces ,body of models, very close-by text contents etc. when using along with content follow the allignment of the content`,
           "lighting": "soft office lighting",
           "composition": "premium white space, sharp focus, high detail.",
           "aspect_ratio": "1:1, resolution 1080×1080, 4K quality look",
@@ -180,7 +179,8 @@
             "top_section": "Job title highlighted with bold typography",
             "middle_section": "Properly aligned Job details displayed in a clean card or grid format and avoid excess spacing. Arrange all keys left alligned and values just after the : with equal spaced from the key",
             "bottom_section": "Contact details aligned neatly with icons",
-            "White_space_area": `Show the ${exp} needed`
+            "White_space_area": `Show the ${exp} needed`,
+            "allignment_standard_to_follow":"if the content is is column layout dont use center align onlu use center align only if the content is columns"
           },
           "footer_details": {
             "Website": "https://www.itjobcell.com/",
