@@ -150,8 +150,16 @@
           "prompt": `Modern corporate job recruitment poster for a ${des}. Clean, minimal UI layout with a light blue and white gradient background. Rounded card-based composition, professional startup aesthetic.
             Headline text: “WE ARE HIRING”Subheading: “${des}” Include a photorealistic South Asian Indian young professional (male or female) working in a modern office environment. Soft office lighting, shallow depth of field, blurred background with subtle blue/white overlay for text readability.`,
           "negative_prompt": "Messy layout, clutter, low resolution, distorted text, poor typography, watermark, logo misuse, oversaturated colors, blur, artifacts, stock-photo look, uncanny faces.",
-          "Image to include": `Photorealistic original young professional ${des} South Asian Indian Proffessional(random male or female ) Model (Think about the age based on the ${des} Senior, Junior etc keep the highest slab 40years and lowest slab 20 years) working in an office environment`,
+          "Image to include": `Photorealistic original young professional ${des} South Asian Indian Proffessional(choose random gender male or female ) Model (Think about the age based on the ${des} identify the  which post the poster is being designed for like is it Senior or Junior, keep the highest age slab as 40years and lowest age slab 20 years while creating the model persona) working in an office environment`,
           "style": "modern corporate UI, marketing poster",
+          "job_details": {
+            "Job_ID": jobID,
+            "JD": jd,
+            "Designation_Name": des,
+            "Experience": exp,
+            "Location": loc
+          },
+          "design_inpiration_attachment" : "If design inspiration image file included then use that design inspiration in designing important to follow and using the contents mentioned job_details only"
           "Technnology icons to include": `include ${des} tech logos well alligned in whitespace area use the logo only if clearly identifiable and shown in original brand colors. Skip if uncertain avoid using over faces ,body of models, very close-by text contents etc`,
           "lighting": "soft office lighting",
           "composition": "premium white space, sharp focus, high detail.",
@@ -167,13 +175,6 @@
               "effect": "Blurred",
               "overlay": "Soft white/blue gradient for text readability"
             }
-          },
-          "job_details": {
-            "Job_ID": jobID,
-            "JD": jd,
-            "Designation_Name": des,
-            "Experience": exp,
-            "Location": loc
           },
           "layout_structure": {
             "top_section": "Job title highlighted with bold typography",
