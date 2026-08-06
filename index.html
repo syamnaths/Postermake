@@ -159,7 +159,74 @@
             "Experience": exp,
             "Location": loc
           },
-          "design_inpiration_attachment" : "If design inspiration image file included overide default then use that design inspiration in designing mood important to follow and using the contents mentioned job_details only",
+          
+          "design_inpiration_attachment": {
+            "instruction": "If a design inspiration image is included, use it only as a visual style reference for layout, spacing, hierarchy, typography, color treatment, mood, component styling, and overall design language. Do not copy or recreate the reference exactly. Preserve the overall design inspiration while generating a fresh original composition using only the information provided in job_details.",
+            "fallback": "If no design inspiration image is provided, automatically create a premium modern corporate recruitment poster that matches the job designation, experience level, and industry.",
+            "image_handling": {
+              "reference_priority": "Use the uploaded reference only for visual styling.",
+              "ignore_reference_content": true,
+              "ignore_reference_text": true,
+              "ignore_reference_logo": true,
+              "ignore_reference_branding": true,
+              "ignore_reference_job_information": true,
+              "generate_new_layout": true,
+              "maintain_original_creativity": true
+            }
+          },
+          "brand_logo": {
+          "source": {
+            "uploaded_logo": "Use the uploaded company's light theme logo image if provided.",
+            "logo_url": "https://www.itjobcell.com/assets/website/img/logo.png",
+            "fallback": "Use the default company logo only if neither an uploaded logo nor logo_url is available."
+          },
+          "priority_order": [
+            "uploaded_logo",
+            "logo_url",
+            "fallback"
+          ],
+          "placement": "Top-left corner",
+          "background": {
+            "style": "Solid corporate blue matching the poster theme with a subtle gradient.",
+            "padding": "20-28px equal padding on all four sides.",
+            "border_radius": "18-24px rounded rectangle.",
+            "shadow": "Soft subtle shadow with low opacity."
+          },
+          "logo_fit": {
+            "preserve_aspect_ratio": true,
+            "safe_margin": "Keep 12-16px internal whitespace around the logo.",
+            "max_width": "220px",
+            "max_height": "70px",
+            "do_not_crop": true,
+            "do_not_stretch": true
+          },
+          "appearance": {
+            "keep_original_colors": true,
+            "do_not_recolor": true,
+            "do_not_modify_logo": true,
+            "do_not_replace_fonts": true,
+            "maintain_transparency": true,
+            "preserve_original_resolution": true
+          },
+          "integration": {
+            "blend_with_design": "Place the logo inside a premium rounded brand card that matches the poster UI theme.",
+            "align_with_content_grid": true,
+            "maintain_consistent_top_and_left_margin": true
+          }
+        },
+          "logo_integration_instruction": "If a company logo is supplied as either an uploaded image or a logo_url, always use that logo exactly as provided. Never recreate, redraw, vectorize, recolor, sharpen, regenerate, or modify the logo. Preserve its original aspect ratio, colors, transparency, typography, proportions, and resolution. The priority order is: uploaded_logo → logo_url → fallback logo. Place the logo inside a premium rounded rectangular brand container using the primary theme blue background with generous equal padding (20-28px), soft rounded corners (18-24px radius), and a subtle shadow. Ensure the logo is perfectly centered within the container with consistent whitespace around every edge. Do not allow the logo to touch the container edges. Maintain equal spacing from the top and left margins of the poster. The logo container should appear as a native UI component rather than a pasted image.",
+          "logo_constraints": {
+          "never_touch_edges": true,
+          "always_use_equal_padding": true,
+          "preserve_transparency": true,
+          "preserve_original_resolution": true,
+          "never_add_outline": true,
+          "never_apply_glow": true,
+          "never_change_brand_colors": true,
+          "never_overlap_text": true,
+          "never_place_over_busy_background": true,
+          "maintain_visual_balance": true
+        },
           "Technnology_icons_to_include": `include proportionate equal height matching dimension ${des} original technology  icon logo especially equally spaced and well alligned relative to the content in whitespace area use tiny original technology icon logo only if clearly identifiable and shown in original brand colors. Skip if uncertain avoid using over faces ,body of models, very close-by text contents etc. when using along with content follow the allignment of the content`,
           "lighting": "soft office lighting",
           "composition": "premium white space, sharp focus, high detail.",
